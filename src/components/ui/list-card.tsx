@@ -45,21 +45,21 @@ export function ListCard({
       {avatarName ? (
         <span
           aria-hidden="true"
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-[0.8125rem] font-semibold text-primary-subtle-foreground"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-[0.8125rem] font-bold text-primary-subtle-foreground"
         >
           {initialsOf(avatarName)}
         </span>
       ) : Icon ? (
         <span
           aria-hidden="true"
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground"
+          className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-muted text-primary"
         >
-          <Icon className="size-4.5" />
+          <Icon className="size-5" />
         </span>
       ) : null}
 
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate text-sm font-medium text-foreground">{title}</span>
+        <span className="truncate text-[0.9375rem] font-semibold text-foreground">{title}</span>
         {subtitle ? (
           <span className="truncate text-[0.8125rem] text-muted-foreground">{subtitle}</span>
         ) : null}
@@ -79,7 +79,7 @@ export function ListCard({
   );
 
   const classes = cn(
-    "flex min-h-16 w-full items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left shadow-xs transition-colors",
+    "flex min-h-[4.5rem] w-full items-center gap-3.5 rounded-2xl border border-border/80 bg-card px-3.5 py-3 text-left transition-colors",
     href && "hover:border-border-strong hover:bg-muted/40",
     className
   );

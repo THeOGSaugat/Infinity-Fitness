@@ -35,6 +35,10 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-strong: var(--primary-strong);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-orange-subtle: var(--accent-orange-subtle);
+  --color-accent-violet: var(--accent-violet);
+  --color-accent-violet-subtle: var(--accent-violet-subtle);
   --color-primary-subtle: var(--primary-subtle);
   --color-primary-subtle-foreground: var(--primary-subtle-foreground);
 
@@ -115,36 +119,44 @@
 :root {
   color-scheme: dark;
 
-  /* Neutrals: near-black with the faintest green cast, stepping up in
-     lightness so cards and popovers read as raised surfaces. */
-  --background: oklch(0.145 0.005 155);
-  --foreground: oklch(0.965 0.004 155);
-  --card: oklch(0.188 0.006 155);
-  --card-foreground: oklch(0.965 0.004 155);
-  --popover: oklch(0.208 0.007 155);
-  --popover-foreground: oklch(0.965 0.004 155);
-  --muted: oklch(0.235 0.007 155);
-  --muted-foreground: oklch(0.72 0.012 155);
-  --accent: oklch(0.25 0.008 155);
-  --accent-foreground: oklch(0.965 0.004 155);
-  --secondary: oklch(0.25 0.007 155);
-  --secondary-foreground: oklch(0.93 0.004 155);
-  --border: oklch(0.285 0.008 155);
-  --border-strong: oklch(0.36 0.01 155);
-  --input: oklch(0.34 0.01 155);
+  /* Neutrals: a true near-black stage (the fitness-app look), stepping up
+     in lightness so cards and popovers read as raised surfaces without
+     needing heavy borders or shadows. */
+  --background: oklch(0.135 0.002 125);
+  --foreground: oklch(0.97 0.003 125);
+  --card: oklch(0.19 0.003 125);
+  --card-foreground: oklch(0.97 0.003 125);
+  --popover: oklch(0.21 0.004 125);
+  --popover-foreground: oklch(0.97 0.003 125);
+  --muted: oklch(0.245 0.004 125);
+  --muted-foreground: oklch(0.72 0.008 125);
+  --accent: oklch(0.255 0.005 125);
+  --accent-foreground: oklch(0.97 0.003 125);
+  --secondary: oklch(0.255 0.004 125);
+  --secondary-foreground: oklch(0.93 0.003 125);
+  --border: oklch(0.265 0.004 125);
+  --border-strong: oklch(0.34 0.006 125);
+  --input: oklch(0.32 0.006 125);
 
-  /* Brand: one vivid green, the only saturated hue in the chrome. Text on
-     it is near-black (≈10:1) — white on a green this bright would fail AA. */
-  --primary: oklch(0.77 0.2 149);
-  --primary-strong: oklch(0.71 0.2 149);
-  --primary-foreground: oklch(0.17 0.03 150);
-  --primary-subtle: oklch(0.27 0.055 150);
-  --primary-subtle-foreground: oklch(0.86 0.15 150);
-  --ring: oklch(0.77 0.2 149);
+  /* Brand: one electric lime — the only saturated hue in the chrome. Text
+     on it is near-black (≈13:1); white on a lime this bright would fail AA. */
+  --primary: oklch(0.87 0.21 127);
+  --primary-strong: oklch(0.81 0.21 127);
+  --primary-foreground: oklch(0.17 0.02 127);
+  --primary-subtle: oklch(0.28 0.06 127);
+  --primary-subtle-foreground: oklch(0.9 0.18 127);
+  --ring: oklch(0.87 0.21 127);
+
+  /* Secondary accents for stat icons and chart series only (never chrome):
+     the warm/cool pair the fitness-dashboard look uses beside the lime. */
+  --accent-orange: oklch(0.72 0.19 45);
+  --accent-orange-subtle: oklch(0.27 0.06 45);
+  --accent-violet: oklch(0.7 0.18 300);
+  --accent-violet-subtle: oklch(0.27 0.06 300);
 
   /* Status colors. Solid tones are only ever fills (bars, dots, buttons);
      text always uses the lighter -foreground tone. Success leans teal and
-     info leans blue so neither is mistaken for the brand green. */
+     info leans blue so neither is mistaken for the brand lime. */
   --success: oklch(0.72 0.14 170);
   --success-foreground: oklch(0.84 0.12 170);
   --success-subtle: oklch(0.26 0.045 170);
@@ -166,14 +178,14 @@
   --info-subtle: oklch(0.26 0.045 240);
   --info-border: oklch(0.43 0.08 240);
 
-  /* Chart ramp: brand green stepping down in lightness and chroma. */
-  --chart-1: oklch(0.77 0.2 149);
-  --chart-2: oklch(0.68 0.16 158);
-  --chart-3: oklch(0.6 0.12 165);
-  --chart-4: oklch(0.5 0.08 170);
-  --chart-5: oklch(0.4 0.05 170);
+  /* Chart ramp: lime first, then the orange/violet accents. */
+  --chart-1: oklch(0.87 0.21 127);
+  --chart-2: oklch(0.72 0.19 45);
+  --chart-3: oklch(0.7 0.18 300);
+  --chart-4: oklch(0.6 0.12 165);
+  --chart-5: oklch(0.45 0.05 125);
 
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 }
 
 @layer base {

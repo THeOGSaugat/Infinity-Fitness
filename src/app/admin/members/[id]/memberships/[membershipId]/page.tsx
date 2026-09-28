@@ -156,7 +156,7 @@ export default async function MembershipDetailPage({
               <li key={payment.id}>
                 <Link
                   href={`/admin/payments/${payment.id}`}
-                  className="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs transition-colors hover:border-border-strong hover:bg-muted/40"
+                  className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 transition-colors hover:border-border-strong hover:bg-muted/40"
                 >
                   <span className="flex min-w-0 flex-col gap-0.5">
                     <span className="text-sm font-semibold tabular-nums">

@@ -279,7 +279,7 @@ export default async function TrainerWorkoutPlanDetailPage({
                     {selectedDay.exercises.map((we) => (
                       <li
                         key={we.id}
-                        className="flex items-start justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3.5 shadow-xs"
+                        className="flex items-start justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3.5"
                       >
                         <div className="flex min-w-0 flex-col gap-1.5">
                           <p className="text-sm font-medium">{we.exercise.name}</p>

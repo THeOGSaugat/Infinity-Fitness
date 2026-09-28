@@ -28,7 +28,7 @@ export function Disclosure({
     <details
       open={defaultOpen}
       className={cn(
-        "group/disclosure rounded-xl border border-border bg-card shadow-xs",
+        "group/disclosure rounded-2xl border border-border/80 bg-card",
         className
       )}
     >

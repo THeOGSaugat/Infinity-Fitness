@@ -37,10 +37,10 @@ export function CheckInPanel({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border p-5 shadow-xs transition-colors md:grid md:grid-cols-[1fr_15rem] md:items-center md:gap-x-6",
+        "flex flex-col gap-4 rounded-2xl border p-5 transition-colors md:grid md:grid-cols-[1fr_15rem] md:items-center md:gap-x-6",
         isCheckedIn
-          ? "border-success-border bg-success-subtle"
-          : "border-border bg-card"
+          ? "border-primary/35 bg-primary-subtle"
+          : "border-border/80 bg-card"
       )}
     >
       <div className="flex items-start justify-between gap-3 md:flex-row-reverse md:items-center md:justify-end md:gap-4">
@@ -48,12 +48,12 @@ export function CheckInPanel({
           <p
             className={cn(
               "text-[0.8125rem] font-medium",
-              isCheckedIn ? "text-success-foreground" : "text-muted-foreground"
+              isCheckedIn ? "text-primary" : "text-muted-foreground"
             )}
           >
             {isCheckedIn ? "You're at the gym" : "Not checked in"}
           </p>
-          <p className="text-xl leading-tight font-semibold tracking-[-0.01em]">
+          <p className="text-xl leading-tight font-bold tracking-[-0.015em]">
             {isCheckedIn && checkedInSince
               ? `Since ${checkedInSince}`
               : isCheckedIn
@@ -66,8 +66,8 @@ export function CheckInPanel({
           className={cn(
             "flex size-11 shrink-0 items-center justify-center rounded-full",
             isCheckedIn
-              ? "bg-success text-primary-foreground"
-              : "bg-primary-subtle text-primary-subtle-foreground"
+              ? "bg-primary text-primary-foreground"
+              : "bg-primary-subtle text-primary"
           )}
         >
           {isCheckedIn ? <LogOut className="size-5" /> : <LogIn className="size-5" />}

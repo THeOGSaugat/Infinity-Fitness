@@ -151,7 +151,7 @@ export default async function MembersPage({
             ))}
           </ul>
 
-          <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-xs md:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card md:block">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">

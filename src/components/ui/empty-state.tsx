@@ -28,13 +28,13 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border-strong bg-card/50 px-6 text-center",
+        "flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border-strong bg-card/50 px-6 text-center",
         compact ? "py-8" : "py-14",
         className
       )}
     >
       {Icon ? (
-        <div className="flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
+        <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-subtle text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </div>
       ) : null}

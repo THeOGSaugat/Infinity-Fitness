@@ -404,7 +404,7 @@ export default async function MemberDetailPage({
                   <li key={membership.id}>
                     <Link
                       href={`${base}/memberships/${membership.id}`}
-                      className="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs transition-colors hover:border-border-strong hover:bg-muted/40"
+                      className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 transition-colors hover:border-border-strong hover:bg-muted/40"
                     >
                       <span className="flex min-w-0 flex-col gap-0.5">
                         <span className="truncate text-sm font-medium">
@@ -456,7 +456,7 @@ export default async function MemberDetailPage({
                   <li key={payment.id}>
                     <Link
                       href={`/admin/payments/${payment.id}`}
-                      className="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs transition-colors hover:border-border-strong hover:bg-muted/40"
+                      className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 transition-colors hover:border-border-strong hover:bg-muted/40"
                     >
                       <span className="flex min-w-0 flex-col gap-0.5">
                         <span className="text-sm font-semibold tabular-nums">
@@ -564,7 +564,7 @@ export default async function MemberDetailPage({
                 {workoutPlans.map((plan) => (
                   <li
                     key={plan.id}
-                    className="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                    className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
                   >
                     <span className="flex min-w-0 flex-col gap-0.5">
                       <span className="truncate text-sm font-medium">{plan.name}</span>
@@ -600,7 +600,7 @@ export default async function MemberDetailPage({
               {progressLogs.map((log) => (
                 <li
                   key={log.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
                 >
                   <div className="flex min-w-0 flex-col">
                     <span className="truncate text-sm font-medium">

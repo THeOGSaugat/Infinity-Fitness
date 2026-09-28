@@ -40,7 +40,7 @@ export default async function MyPaymentsPage() {
         />
       ) : (
         <>
-          <div className="rounded-xl border border-border bg-card p-4 shadow-xs">
+          <div className="rounded-2xl border border-border/80 bg-card p-4">
             <p className="text-[0.8125rem] font-medium text-muted-foreground">Total paid</p>
             <p className="mt-1 text-2xl leading-none font-semibold tracking-[-0.02em] tabular-nums">
               {formatMinorUnits(totalPaidMinor)}
@@ -54,7 +54,7 @@ export default async function MyPaymentsPage() {
             {payments.map((payment) => (
               <li
                 key={payment.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
               >
                 <div className="flex min-w-0 flex-col gap-0.5">
                   <span className="text-sm font-semibold tabular-nums">

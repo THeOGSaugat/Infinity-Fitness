@@ -32,7 +32,7 @@ export function UserMenu({
           <Button variant="ghost" size="icon" aria-label={`Account menu for ${name}`}>
             <span
               aria-hidden="true"
-              className="flex size-8 items-center justify-center rounded-full bg-muted text-[0.8125rem] font-semibold text-foreground"
+              className="flex size-9 items-center justify-center rounded-full bg-primary text-[0.8125rem] font-bold text-primary-foreground"
             >
               {initial}
             </span>

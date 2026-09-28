@@ -144,6 +144,71 @@ export async function listAttendanceForMember(actor: Actor, memberId: string, pa
 }
 
 /** Admin-only: everyone's attendance for today, most recent check-in first. */
+export type ActivityDay = {
+  /** Midnight UTC of the day (the same day boundary attendance uses everywhere). */
+  date: Date;
+  visits: number;
+  /** Time spent at the gym that day, in whole minutes. */
+  minutes: number;
+  isToday: boolean;
+};
+
+/** A session longer than this is treated as a forgotten check-out, not a workout. */
+const MAX_SESSION_MINUTES = 12 * 60;
+
+/**
+ * The member's last `days` days of gym visits, oldest first — one entry
+ * per day including empty ones, so a chart can draw a bar for each.
+ *
+ * Built only from real check-ins: a day's minutes are the sum of its
+ * sessions (check-in to check-out). A session still open *today* counts up
+ * to now; an open session from an earlier day (a forgotten check-out)
+ * counts as a visit but adds no time, rather than inventing hours.
+ */
+export async function getRecentActivity(
+  actor: Actor,
+  memberId: string,
+  days = 7,
+): Promise<{ days: ActivityDay[]; totalVisits: number; totalMinutes: number; activeDays: number }> {
+  if (!canViewAttendanceFor(actor, memberId)) {
+    throw new ForbiddenError("You don't have permission to view this member's attendance.");
+  }
+
+  const now = new Date();
+  const today = startOfDay(now);
+  const span = Math.min(Math.max(Math.floor(days), 1), 31);
+  const from = new Date(today.getTime() - (span - 1) * 24 * 60 * 60 * 1000);
+
+  const records = await db.attendance.findMany({
+    where: { memberId, attendanceDate: { gte: from } },
+    select: { attendanceDate: true, checkInAt: true, checkOutAt: true },
+  });
+
+  const result: ActivityDay[] = Array.from({ length: span }, (_, i) => {
+    const date = new Date(from.getTime() + i * 24 * 60 * 60 * 1000);
+    return { date, visits: 0, minutes: 0, isToday: date.getTime() === today.getTime() };
+  });
+
+  for (const record of records) {
+    const index = Math.round((record.attendanceDate.getTime() - from.getTime()) / 86_400_000);
+    const day = result[index];
+    if (!day) continue;
+    day.visits += 1;
+    const end = record.checkOutAt ?? (day.isToday ? now : null);
+    if (end) {
+      const minutes = Math.floor((end.getTime() - record.checkInAt.getTime()) / 60_000);
+      day.minutes += Math.min(Math.max(minutes, 0), MAX_SESSION_MINUTES);
+    }
+  }
+
+  return {
+    days: result,
+    totalVisits: result.reduce((sum, day) => sum + day.visits, 0),
+    totalMinutes: result.reduce((sum, day) => sum + day.minutes, 0),
+    activeDays: result.filter((day) => day.visits > 0).length,
+  };
+}
+
 export async function listTodayAttendance(actor: Actor) {
   if (!canViewAllAttendance(actor)) {
     throw new ForbiddenError("Only admins can view all members' attendance.");

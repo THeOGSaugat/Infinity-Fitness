@@ -32,7 +32,7 @@ export function Section({
         <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
           <div className="flex min-w-0 flex-col gap-1">
             {title ? (
-              <Heading className="text-lg leading-snug font-semibold tracking-[-0.01em]">
+              <Heading className="text-lg leading-snug font-bold tracking-[-0.01em]">
                 {title}
               </Heading>
             ) : null}

@@ -9,19 +9,22 @@ import { cn } from "cn"
  * `tap-target` utility when they sit in a touch-reachable row, which
  * expands the hit area without changing how large the control looks.
  *
+ * Every button is a pill — the fitness-app look — and the primary one is a
+ * solid lime with near-black text, the single loudest thing on screen.
+ *
  * `destructive` is a solid red because a destructive action should never be
  * the quietest thing on screen; `destructive-subtle` exists for the lower
  * emphasis "remove this row" case, where the solid treatment would shout.
  */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,translate] outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/40 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,translate] outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/40 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 focus-visible:border-primary",
+          "bg-primary font-semibold text-primary-foreground hover:bg-primary-strong focus-visible:border-primary",
         outline:
-          "border-border-strong bg-card text-foreground shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted",
+          "border-border-strong bg-card text-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-muted",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_6%)]",
         subtle:
@@ -36,12 +39,12 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        xs: "tap-target h-8 gap-1 rounded-md px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
+        xs: "tap-target h-8 gap-1 px-3 text-xs [&_svg:not([class*='size-'])]:size-3.5",
         sm: "tap-target h-9 gap-1.5 px-3 text-[0.8125rem]",
         lg: "h-11 px-5",
         xl: "h-12 px-6 text-base",
         icon: "size-10",
-        "icon-xs": "tap-target size-8 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-xs": "tap-target size-8 [&_svg:not([class*='size-'])]:size-3.5",
         "icon-sm": "tap-target size-9",
         "icon-lg": "size-11",
       },

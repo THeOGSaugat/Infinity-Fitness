@@ -51,7 +51,7 @@ export function StatCard({
           <span
             aria-hidden="true"
             className={cn(
-              "flex size-8 shrink-0 items-center justify-center rounded-lg",
+              "flex size-9 shrink-0 items-center justify-center rounded-xl",
               styles.icon
             )}
           >
@@ -62,7 +62,7 @@ export function StatCard({
       <div className="mt-2 flex items-end justify-between gap-2">
         <p
           className={cn(
-            "text-2xl leading-none font-semibold tracking-[-0.02em] tabular-nums",
+            "text-[1.75rem] leading-none font-extrabold tracking-[-0.025em] tabular-nums",
             styles.value
           )}
         >
@@ -82,7 +82,7 @@ export function StatCard({
   );
 
   const classes = cn(
-    "flex flex-col rounded-xl border border-border bg-card p-4 shadow-xs",
+    "flex flex-col rounded-2xl border border-border/80 bg-card p-4",
     href && "transition-colors hover:border-border-strong hover:bg-muted/30",
     className
   );

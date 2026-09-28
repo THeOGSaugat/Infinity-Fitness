@@ -139,7 +139,7 @@ export default async function MyMembershipPage() {
             {past.map((membership) => (
               <li
                 key={membership.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
               >
                 <div className="flex min-w-0 flex-col gap-0.5">
                   <span className="truncate text-sm font-medium">

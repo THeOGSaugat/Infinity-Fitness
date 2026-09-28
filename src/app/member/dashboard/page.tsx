@@ -6,16 +6,24 @@ import {
   ChevronRight,
   CircleAlert,
   Dumbbell,
+  Flame,
+  ScrollText,
+  Timer,
   TrendingUp,
+  type LucideIcon,
 } from "lucide-react";
 import { requireRole } from "@/lib/auth/session";
 import { getMemberDashboard } from "@/server/services/dashboard.service";
 import { listNotifications } from "@/server/services/notification.service";
-import { getTodayStatus } from "@/server/services/attendance.service";
+import { getRecentActivity, getTodayStatus } from "@/server/services/attendance.service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Section } from "@/components/ui/section";
+import { ProgressRing } from "@/components/ui/progress-ring";
+import { StatTile } from "@/components/ui/stat-tile";
+import { formatMinutes } from "@/lib/activity-display";
+import { PlanHeroCard } from "@/components/workouts/plan-hero-card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { CheckInPanel } from "@/components/attendance/check-in-panel";
 import { METRIC_UNIT, metricLabel } from "@/lib/progress-display";
@@ -33,6 +41,13 @@ function formatTime(date: Date): string {
   return date.toLocaleTimeString([], zoned({ hour: "numeric", minute: "2-digit" }));
 }
 
+const QUICK_ACTIONS: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "/member/workout-plans", label: "Workouts", icon: Dumbbell },
+  { href: "/member/progress", label: "Progress", icon: TrendingUp },
+  { href: "/member/attendance", label: "Visits", icon: CalendarCheck },
+  { href: "/member/membership", label: "Membership", icon: ScrollText },
+];
+
 function greeting(): string {
   const hour = hourInAppTimeZone();
   if (hour < 12) return "Good morning";
@@ -43,10 +58,11 @@ function greeting(): string {
 export default async function MemberDashboardPage() {
   const actor = await requireRole("MEMBER");
 
-  const [data, unreadNotifications, todayStatus] = await Promise.all([
+  const [data, unreadNotifications, todayStatus, activity] = await Promise.all([
     getMemberDashboard(actor),
     listNotifications(actor, { unreadOnly: true }),
     getTodayStatus(actor, actor.id),
+    getRecentActivity(actor, actor.id, 7),
   ]);
 
   const firstName = (actor.name ?? "").split(" ")[0] ?? "";
@@ -76,19 +92,30 @@ export default async function MemberDashboardPage() {
     : undefined;
   const recentNotifications = unreadNotifications.slice(0, 3);
 
+  const plan = data.currentWorkoutPlan;
+  const weeklyShare = activity.activeDays / activity.days.length;
+
+  // Share of the membership still remaining, for its ring (from the same
+  // daysLeft figure shown beside it).
+  const membershipDays = membership
+    ? Math.max(1, Math.round((membership.endDate.getTime() - membership.startDate.getTime()) / 86_400_000))
+    : 1;
+  const membershipRemaining = daysLeft !== null ? Math.min(Math.max(daysLeft / membershipDays, 0), 1) : 0;
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <p className="text-[0.8125rem] font-medium text-muted-foreground">
-          {new Date().toLocaleDateString(undefined, zoned({
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          }))}
-        </p>
-        <h1 className="text-2xl leading-tight font-semibold tracking-[-0.02em] sm:text-[1.75rem]">
+      <div className="flex flex-col gap-1.5">
+        <p className="text-sm font-medium text-muted-foreground">
           {greeting()}
-          {firstName ? `, ${firstName}` : ""}
+          {firstName ? `, ${firstName}` : ""} <span aria-hidden="true">👋</span>
+          <span className="sr-only">
+            {" — "}
+            {new Date().toLocaleDateString(undefined, zoned({ weekday: "long", day: "numeric", month: "long" }))}
+          </span>
+        </p>
+        <h1 className="text-[2rem] leading-[1.08] font-extrabold tracking-[-0.03em] text-balance sm:text-[2.25rem]">
+          Ready to crush <br className="sm:hidden" />
+          your goals?
         </h1>
       </div>
 
@@ -169,56 +196,103 @@ export default async function MemberDashboardPage() {
       <div className="grid gap-4 lg:grid-cols-3 lg:items-start">
         <div className="flex flex-col gap-4 lg:col-span-2">
           <Card>
-            <CardHeader>
-              <CardTitle>Today&apos;s workout</CardTitle>
+            <CardHeader className="grid-cols-[1fr_auto]">
+              <CardTitle>Weekly progress</CardTitle>
+              <Link
+                href="/member/progress"
+                className="col-start-2 row-start-1 inline-flex min-h-8 items-center gap-0.5 text-[0.8125rem] font-semibold text-primary hover:underline"
+              >
+                Details
+                <ChevronRight aria-hidden="true" className="size-4" />
+              </Link>
             </CardHeader>
-            <CardContent>
-              {data.currentWorkoutPlan ? (
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base font-medium">{data.currentWorkoutPlan.name}</p>
-                    <StatusBadge
-                      kind="plan"
-                      status={data.currentWorkoutPlan.status}
-                      size="sm"
-                    />
-                  </div>
-                  <p className="text-[0.8125rem] text-muted-foreground">
-                    Started {data.currentWorkoutPlan.startDate.toLocaleDateString(undefined, zoned())}
-                    {data.currentWorkoutPlan.endDate
-                      ? ` · ends ${data.currentWorkoutPlan.endDate.toLocaleDateString(undefined, zoned())}`
-                      : ""}
-                  </p>
-                  <Button
-                    className="w-full sm:w-fit"
-                    nativeButton={false}
-                    render={
-                      <Link href={`/member/workout-plans/${data.currentWorkoutPlan.id}`}>
-                        Open plan
-                      </Link>
-                    }
-                  />
-                </div>
-              ) : (
-                <EmptyState
-                  compact
-                  icon={Dumbbell}
-                  title="No workout plan yet"
-                  description="Your trainer will assign one — it'll show up here."
+            <CardContent className="flex items-center gap-5 sm:gap-8">
+              <ProgressRing
+                value={weeklyShare}
+                size={116}
+                strokeWidth={11}
+                label={`Active on ${activity.activeDays} of the last ${activity.days.length} days`}
+              >
+                <span className="text-[1.625rem] leading-none font-extrabold tabular-nums">
+                  {Math.round(weeklyShare * 100)}
+                  <span className="text-sm font-bold">%</span>
+                </span>
+                <span className="mt-1 text-[0.6875rem] font-medium text-muted-foreground tabular-nums">
+                  {activity.activeDays}/{activity.days.length} days
+                </span>
+              </ProgressRing>
+              <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:gap-8">
+                <StatTile
+                  icon={Flame}
+                  tone="orange"
+                  label="Gym visits"
+                  value={activity.totalVisits}
+                  hint="last 7 days"
                 />
-              )}
+                <StatTile
+                  icon={Timer}
+                  label="Active time"
+                  value={formatMinutes(activity.totalMinutes)}
+                  hint="at the gym"
+                />
+              </div>
             </CardContent>
           </Card>
 
           <Section
+            title="Today's workout"
+            actions={
+              <Link
+                href="/member/workout-plans"
+                className="inline-flex min-h-8 items-center text-[0.8125rem] font-semibold text-primary hover:underline"
+              >
+                See all
+              </Link>
+            }
+          >
+            {plan ? (
+              <PlanHeroCard plan={plan} href={`/member/workout-plans/${plan.id}`} />
+            ) : (
+              <EmptyState
+                compact
+                icon={Dumbbell}
+                title="No workout plan yet"
+                description="Your trainer will assign one — it'll show up here."
+              />
+            )}
+          </Section>
+
+          {/* Phone-only shortcut tiles; on laptops the sidebar covers these. */}
+          <Section title="Quick actions" className="lg:hidden">
+            <ul className="grid grid-cols-4 gap-3">
+              {QUICK_ACTIONS.map((action) => (
+                <li key={action.href}>
+                  <Link
+                    href={action.href}
+                    className="flex flex-col items-center gap-2 rounded-2xl text-center text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="flex aspect-square w-full max-w-16 items-center justify-center rounded-2xl border border-border/80 bg-card text-primary"
+                    >
+                      <action.icon className="size-6" />
+                    </span>
+                    {action.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Section>
+
+          <Section
             title="Recent activity"
             actions={
-              <Button
-                variant="ghost"
-                size="sm"
-                nativeButton={false}
-                render={<Link href="/member/attendance">All visits</Link>}
-              />
+              <Link
+                href="/member/attendance"
+                className="inline-flex min-h-8 items-center text-[0.8125rem] font-semibold text-primary hover:underline"
+              >
+                All visits
+              </Link>
             }
           >
             {data.recentAttendance.length === 0 ? (
@@ -233,7 +307,7 @@ export default async function MemberDashboardPage() {
                 {data.recentAttendance.map((record) => (
                   <li
                     key={record.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3.5"
                   >
                     <div className="flex min-w-0 flex-col">
                       <span className="text-sm font-medium">
@@ -268,9 +342,22 @@ export default async function MemberDashboardPage() {
             <CardContent>
               {membership ? (
                 <div className="flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base font-medium">{membership.planName}</p>
-                    <StatusBadge kind="membership" status={membership.status} size="sm" />
+                  <div className="flex items-center gap-4">
+                    {membership.isCurrentlyActive && daysLeft !== null && daysLeft >= 0 ? (
+                      <ProgressRing
+                        value={membershipRemaining}
+                        size={64}
+                        strokeWidth={7}
+                        label={`${daysLeft} day${daysLeft === 1 ? "" : "s"} left on this membership`}
+                      >
+                        <span className="text-base leading-none font-extrabold tabular-nums">{daysLeft}</span>
+                        <span className="text-[0.5625rem] font-medium text-muted-foreground">days</span>
+                      </ProgressRing>
+                    ) : null}
+                    <div className="flex min-w-0 flex-col gap-1.5">
+                      <p className="text-base font-bold">{membership.planName}</p>
+                      <StatusBadge kind="membership" status={membership.status} size="sm" />
+                    </div>
                   </div>
                   <p className="text-[0.8125rem] text-muted-foreground">
                     {membership.isCurrentlyActive && daysLeft !== null && daysLeft >= 0

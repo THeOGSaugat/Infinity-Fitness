@@ -36,7 +36,7 @@ export function AppHeader({
   const hasUnread = unreadNotificationCount > 0;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border/70 bg-background/85 backdrop-blur-lg">
       <div className="flex h-16 items-center gap-2 px-4 sm:px-6">
         {showMenuTrigger ? (
           <div className="lg:hidden">
@@ -55,12 +55,12 @@ export function AppHeader({
           <BrandMark href={nav.home} role={roleLabel} compact />
         </div>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
             nativeButton={false}
-            className="relative"
+            className="relative border border-border/80 bg-card hover:bg-muted"
             render={
               <Link
                 href={nav.notificationsHref}
@@ -74,7 +74,7 @@ export function AppHeader({
                 {hasUnread ? (
                   <span
                     aria-hidden="true"
-                    className="absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] font-semibold text-primary-foreground tabular-nums"
+                    className="absolute -top-1 -right-1 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] font-bold text-primary-foreground tabular-nums ring-2 ring-background"
                   >
                     {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
                   </span>

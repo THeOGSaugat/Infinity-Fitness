@@ -158,7 +158,7 @@ export default async function TrainerAssignedMemberDetailPage({
                 {attendance.slice(0, 8).map((record) => (
                   <li
                     key={record.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
                   >
                     <span className="text-sm font-medium">
                       {record.attendanceDate.toLocaleDateString(undefined, zoned({
@@ -241,7 +241,7 @@ export default async function TrainerAssignedMemberDetailPage({
               {progressLogs.map((log) => (
                 <li
                   key={log.id}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
                 >
                   <div className="flex min-w-0 flex-col">
                     <span className="truncate text-sm font-medium">

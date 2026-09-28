@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { CalendarCheck } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ActivityBars } from "@/components/charts/activity-bars";
+import { formatMinutes } from "@/lib/activity-display";
 import { requireRole } from "@/lib/auth/session";
-import { getTodayStatus, listAttendanceForMember } from "@/server/services/attendance.service";
+import {
+  getRecentActivity,
+  getTodayStatus,
+  listAttendanceForMember,
+} from "@/server/services/attendance.service";
 import { PageHeader } from "@/components/ui/page-header";
 import { Pagination } from "@/components/ui/pagination";
 import { Section } from "@/components/ui/section";
@@ -29,9 +36,10 @@ export default async function MyAttendancePage({
   const { page: pageParam } = await searchParams;
   const page = parsePageParam(pageParam);
 
-  const [{ openSession, todaysRecords }, history] = await Promise.all([
+  const [{ openSession, todaysRecords }, history, activity] = await Promise.all([
     getTodayStatus(actor, actor.id),
     listAttendanceForMember(actor, actor.id, page),
+    getRecentActivity(actor, actor.id, 7),
   ]);
 
   return (
@@ -48,13 +56,25 @@ export default async function MyAttendancePage({
         checkOutAction={checkOutAction}
       />
 
+      <Card>
+        <CardHeader className="grid-cols-[1fr_auto]">
+          <CardTitle>This week</CardTitle>
+          <span className="col-start-2 row-start-1 text-[0.8125rem] font-semibold text-primary tabular-nums">
+            {activity.totalVisits} visit{activity.totalVisits === 1 ? "" : "s"} · {formatMinutes(activity.totalMinutes)}
+          </span>
+        </CardHeader>
+        <CardContent>
+          <ActivityBars days={activity.days} />
+        </CardContent>
+      </Card>
+
       {todaysRecords.length > 0 ? (
         <Section title="Today" description={`${todaysRecords.length} visit${todaysRecords.length === 1 ? "" : "s"}`}>
           <ul className="flex flex-col gap-2">
             {todaysRecords.map((record) => (
               <li
                 key={record.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
               >
                 <span className="text-sm font-medium tabular-nums">
                   {formatTime(record.checkInAt)}
@@ -86,7 +106,7 @@ export default async function MyAttendancePage({
             {history.items.map((record) => (
               <li
                 key={record.id}
-                className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3"
               >
                 <div className="flex min-w-0 flex-col">
                   <span className="text-sm font-medium">

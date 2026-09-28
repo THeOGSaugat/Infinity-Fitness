@@ -129,7 +129,7 @@ export default async function AuditLogPage({
             {items.map((entry) => (
               <li
                 key={entry.id}
-                className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-xs"
+                className="flex flex-col gap-1 rounded-2xl border border-border/80 bg-card p-4"
               >
                 <p className="text-xs font-medium text-muted-foreground">
                   {AUDIT_ACTION_LABEL[entry.action]}
@@ -142,7 +142,7 @@ export default async function AuditLogPage({
             ))}
           </ul>
 
-          <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-xs md:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card md:block">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">

@@ -216,6 +216,14 @@ export async function listWorkoutPlansForMember(actor: Actor, memberId: string) 
   return db.workoutPlan.findMany({
     where: { memberId },
     orderBy: { startDate: "desc" },
+    // Just counts — enough for a plan card to say "3 days · 9 exercises"
+    // without loading every exercise row.
+    include: {
+      days: {
+        orderBy: { orderIndex: "asc" as const },
+        select: { id: true, label: true, _count: { select: { exercises: true } } },
+      },
+    },
   });
 }
 

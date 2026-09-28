@@ -54,12 +54,12 @@ export function ProgressSummary({
         return (
           <li
             key={latest.id}
-            className="flex min-w-0 flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-xs"
+            className="flex min-w-0 flex-col gap-1 rounded-2xl border border-border/80 bg-card p-4"
           >
             <p className="truncate text-[0.8125rem] font-medium text-muted-foreground">
               {metricLabel(latest.metric, latest.customLabel)}
             </p>
-            <p className="text-2xl leading-none font-semibold tracking-[-0.02em] tabular-nums">
+            <p className="text-2xl leading-none font-extrabold tracking-[-0.02em] tabular-nums">
               {latest.value}
               <span className="ml-1 text-sm font-normal text-muted-foreground">
                 {METRIC_UNIT[latest.metric]}

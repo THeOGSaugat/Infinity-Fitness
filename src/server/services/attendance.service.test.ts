@@ -7,6 +7,7 @@ import {
   listAttendanceForMember,
   listTodayAttendance,
   listAttendanceHistory,
+  getRecentActivity,
 } from "./attendance.service";
 import { ForbiddenError, NotFoundError, ConflictError } from "@/lib/errors";
 import { startOfDay } from "@/lib/date";
@@ -260,5 +261,63 @@ describe("listAttendanceHistory", () => {
     expect(prismaMock.attendance.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ skip: 40, take: 20 }),
     );
+  });
+});
+
+describe("getRecentActivity", () => {
+  const DAY = 24 * 60 * 60 * 1000;
+
+  it("is limited to the member themself (and admins) — never another member or a trainer", async () => {
+    await expect(getRecentActivity(otherMember, "member-1")).rejects.toBeInstanceOf(ForbiddenError);
+    await expect(getRecentActivity(trainer, "member-1")).rejects.toBeInstanceOf(ForbiddenError);
+    expect(prismaMock.attendance.findMany).not.toHaveBeenCalled();
+  });
+
+  it("returns one entry per day, oldest first, with real visit counts and minutes", async () => {
+    const today = startOfDay(new Date());
+    const twoDaysAgo = new Date(today.getTime() - 2 * DAY);
+    prismaMock.attendance.findMany.mockResolvedValue([
+      // Two closed sessions two days ago: 60 + 30 minutes.
+      { attendanceDate: twoDaysAgo, checkInAt: new Date(twoDaysAgo.getTime() + 8 * 3600e3), checkOutAt: new Date(twoDaysAgo.getTime() + 9 * 3600e3) },
+      { attendanceDate: twoDaysAgo, checkInAt: new Date(twoDaysAgo.getTime() + 18 * 3600e3), checkOutAt: new Date(twoDaysAgo.getTime() + 18.5 * 3600e3) },
+    ] as never);
+
+    const result = await getRecentActivity(member, "member-1", 7);
+
+    expect(result.days).toHaveLength(7);
+    expect(result.days[6]?.isToday).toBe(true);
+    expect(result.days[4]).toMatchObject({ visits: 2, minutes: 90 });
+    expect(result).toMatchObject({ totalVisits: 2, totalMinutes: 90, activeDays: 1 });
+    expect(prismaMock.attendance.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { memberId: "member-1", attendanceDate: { gte: result.days[0]?.date } } }),
+    );
+  });
+
+  it("counts a forgotten check-out as a visit without inventing time", async () => {
+    const today = startOfDay(new Date());
+    const yesterday = new Date(today.getTime() - DAY);
+    prismaMock.attendance.findMany.mockResolvedValue([
+      { attendanceDate: yesterday, checkInAt: new Date(yesterday.getTime() + 10 * 3600e3), checkOutAt: null },
+    ] as never);
+
+    const result = await getRecentActivity(member, "member-1", 7);
+    expect(result.days[5]).toMatchObject({ visits: 1, minutes: 0 });
+    expect(result.totalMinutes).toBe(0);
+  });
+
+  it("caps an absurdly long session so one mistake can't dominate the week", async () => {
+    const today = startOfDay(new Date());
+    const threeDaysAgo = new Date(today.getTime() - 3 * DAY);
+    prismaMock.attendance.findMany.mockResolvedValue([
+      { attendanceDate: threeDaysAgo, checkInAt: threeDaysAgo, checkOutAt: new Date(threeDaysAgo.getTime() + 30 * 3600e3) },
+    ] as never);
+
+    const result = await getRecentActivity(member, "member-1", 7);
+    expect(result.days[3]?.minutes).toBe(12 * 60);
+  });
+
+  it("lets an admin view a member's activity", async () => {
+    prismaMock.attendance.findMany.mockResolvedValue([]);
+    await expect(getRecentActivity(admin, "member-1")).resolves.toMatchObject({ totalVisits: 0 });
   });
 });

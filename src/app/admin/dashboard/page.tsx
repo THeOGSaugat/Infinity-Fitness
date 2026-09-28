@@ -225,7 +225,7 @@ export default async function AdminDashboardPage() {
               <li key={member.id}>
                 <Link
                   href={`/admin/members/${member.id}`}
-                  className="flex min-h-16 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-xs transition-colors hover:border-border-strong hover:bg-muted/40"
+                  className="flex min-h-16 items-center gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 transition-colors hover:border-border-strong hover:bg-muted/40"
                 >
                   <span
                     aria-hidden="true"

@@ -64,7 +64,7 @@ export function AppShell({
           // Bottom padding clears the fixed tab bar on mobile; it's removed
           // once the sidebar takes over at `lg`.
           hasTabBar
-            ? "flex-1 px-4 pt-6 pb-24 outline-none sm:px-6 lg:pb-10"
+            ? "flex-1 px-4 pt-6 pb-28 outline-none sm:px-6 lg:pb-10"
             : "flex-1 px-4 pt-6 pb-10 outline-none sm:px-6"
         }
       >
