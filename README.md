@@ -10,11 +10,6 @@ The system brings common gym activities such as members, trainers, memberships, 
 
 ---
 
-## 🔗 Live Demo
-
-**Website:** YOUR_LIVE_WEBSITE_URL
-
----
 
 # 🔐 Demo Admin Account
 
@@ -53,8 +48,8 @@ Open the website and select the **Admin Portal**.
 Use the demo credentials:
 
 ```text
-Email: demo@infinityfitness.com
-Password: DemoAdmin123!
+Email: saugat.owner@gmail.com
+Password: t4S0dMFBf1QRxlLP
 ```
 
 After logging in, you will see the Admin Dashboard.
