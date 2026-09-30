@@ -24,12 +24,12 @@ The system brings common gym activities such as members, trainers, memberships, 
 
 **Email**
 ```text
-demo@infinityfitness.com
+saugat.owner@gmail.com
 ```
 
 **Password**
 ```text
-DemoAdmin123!
+t4S0dMFBf1QRxlLP
 ```
 
 After logging in as Admin, you can create your own **Trainer** and **Member** accounts and use them to explore the other portals.
